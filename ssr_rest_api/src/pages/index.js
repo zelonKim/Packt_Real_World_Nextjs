@@ -1,0 +1,75 @@
+/* import { useEffect } from 'react'
+import Link from 'next/link'
+import axios from 'axios'
+
+export async function getServerSideProps() {
+  const usersReq = await axios.get('https://api.rwnjs.com/04/users')
+
+  return {
+    props: {
+      users: usersReq.data
+    }
+  }
+} // need to call REST API from the 'getServerSideProps' 
+ // and pass the request result as a prop to the Page component
+
+ 
+function HomePage({ users }) {
+  return (
+   <ul>
+    {
+      users.map((user) => 
+        <li key={user.id}>
+          <Link href={`/users/${user.username}`} passHref> {user.username} </Link>
+        </li>)
+    }
+   </ul>
+  )
+}
+export default HomePage; */
+
+
+
+//////////////////
+
+
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+
+
+function List({users}) {
+  return (
+    <ul>
+      {
+        users.map((user) => 
+          <li key={user.id}>
+            <Link href={`/users/${user.username}`} passHref> {user.username} </Link>
+          </li>)
+      }
+    </ul>
+  )
+}
+
+
+function Users() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+
+  useEffect( async() => {
+    const req = await fetch('https://api.rwnjs.com/04/users');
+    const users = await req.json()
+ 
+    setLoading(false)
+    setData(users)
+  }, [])
+
+  return (
+      <div>
+        {loading && <div> Loading users... </div>}
+        {data && <List users={data} />}
+      </div>
+  )
+}
+
+export default Users;
